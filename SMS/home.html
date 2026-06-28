@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salon Management System - Home</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body{
+            background:#f4f6f9;
+        }
+
+        /* Navigation Bar */
+        nav{
+            background:#2c3e50;
+            color:white;
+            padding:15px 40px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+
+        nav .logo{
+            font-size:24px;
+            font-weight:bold;
+        }
+
+        nav ul{
+            list-style:none;
+            display:flex;
+            gap:20px;
+        }
+
+        nav ul li a{
+            text-decoration:none;
+            color:white;
+            font-size:16px;
+            transition:0.3s;
+        }
+
+        nav ul li a:hover{
+            color:#f39c12;
+        }
+
+        /* Main Container */
+        .container{
+            width:90%;
+            margin:40px auto;
+        }
+
+        h1{
+            text-align:center;
+            margin-bottom:30px;
+            color:#2c3e50;
+        }
+
+        /* Dashboard Cards */
+        .dashboard{
+            display:flex;
+            flex-wrap:wrap;
+            justify-content:center;
+            gap:25px;
+        }
+
+        .card{
+            background:white;
+            width:220px;
+            padding:25px;
+            border-radius:12px;
+            text-align:center;
+            box-shadow:0 4px 10px rgba(0,0,0,0.1);
+            transition:0.3s;
+        }
+
+        .card:hover{
+            transform:translateY(-5px);
+            box-shadow:0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .card h2{
+            color:#555;
+            font-size:18px;
+            margin-bottom:15px;
+        }
+
+        .card p{
+            font-size:40px;
+            font-weight:bold;
+            color:#2c3e50;
+        }
+
+        /* Pie Chart */
+        .chart-container{
+            width:700px;
+            max-width:100%;
+            margin:50px auto;
+            background:white;
+            padding:30px;
+            border-radius:12px;
+            box-shadow:0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        /* About Section */
+        .about-card{
+            background:white;
+            padding:30px;
+            border-radius:12px;
+            box-shadow:0 4px 10px rgba(0,0,0,0.1);
+            line-height:1.8;
+        }
+
+        .about-card ul{
+            margin-top:15px;
+            padding-left:25px;
+        }
+
+        .about-card li{
+            margin-bottom:10px;
+        }
+
+        .loading{
+            text-align:center;
+            font-size:20px;
+            color:#555;
+        }
+
+        /* Responsive Design */
+        @media(max-width:768px){
+
+            nav{
+                flex-direction:column;
+                gap:10px;
+            }
+
+            nav ul{
+                flex-wrap:wrap;
+                justify-content:center;
+            }
+
+            .card{
+                width:100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="logo">SALOON MANAGEMENT SYSTEM</div>
+
+        <ul>
+            <li><a href="home.html">Home</a></li>
+            <li><a href="customers.html">Customers</a></li>
+            <li><a href="employee.html">Employees</a></li>
+            <li><a href="branch.html">Branches</a></li>
+            <li><a href="services.html">Services</a></li>
+            
+        </ul>
+    </nav>
+
+    <!-- Dashboard Cards -->
+    <div class="container">
+
+        <h1>HOME DASHBOARD</h1>
+
+        <div class="dashboard" id="dashboard">
+            <p class="loading">Loading dashboard data...</p>
+        </div>
+
+    </div>
+
+    <!-- Pie Chart -->
+    <div class="container">
+        <h1>Business Statistics</h1>
+
+        <div class="chart-container">
+            <canvas id="statsChart"></canvas>
+        </div>
+    </div>
+
+    <!-- About Section -->
+    <div class="container">
+
+        <h1>About Salon Management System</h1>
+
+        <div class="about-card">
+
+            <p>
+                The Salon Management System is designed to automate and
+                simplify daily salon operations. It provides an easy way
+                to manage employees, customers, services, branches and
+                appointments from one centralized system.
+            </p>
+
+            <br>
+
+            <p>
+                The dashboard gives real-time information about the salon's
+                business activities and helps managers make better decisions
+                using visual reports and statistics.
+            </p>
+
+            <br>
+
+            <h3>Main Features:</h3>
+
+            <ul>
+                <li>Employee Management</li>
+                <li>Branch Management</li>
+                <li>Service Management</li>
+                <li>Customer Management</li>
+                <li>Appointment Scheduling</li>
+                <li>Business Analytics Dashboard</li>
+            </ul>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        const API_URL =
+        "https://improved-space-dollop-wrwv9v4r97g9c5957-3000.app.github.dev/details";
+
+        async function loadData() {
+
+            const dashboard =
+            document.getElementById("dashboard");
+
+            try {
+
+                const response = await fetch(API_URL);
+
+                if(!response.ok){
+                    throw new Error(
+                        `HTTP Error: ${response.status}`
+                    );
+                }
+
+                const data = await response.json();
+                const stats = data[0];
+
+                dashboard.innerHTML = `
+
+                    <div class="card">
+                        <h2>Total Employees</h2>
+                        <p>${stats.total_employees}</p>
+                    </div>
+
+                    <div class="card">
+                        <h2>Total Branches</h2>
+                        <p>${stats.total_branches}</p>
+                    </div>
+
+                    <div class="card">
+                        <h2>Total Services</h2>
+                        <p>${stats.total_services}</p>
+                    </div>
+
+                    <div class="card">
+                        <h2>Total Customers</h2>
+                        <p>${stats.total_customers}</p>
+                    </div>
+
+                    <div class="card">
+                        <h2>Total Appointments</h2>
+                        <p>${stats.total_appointments}</p>
+                    </div>
+                `;
+
+                const ctx =
+                document.getElementById('statsChart');
+
+                new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: [
+                            'Employees',
+                            'Branches',
+                            'Services',
+                            'Customers',
+                            'Appointments'
+                        ],
+                        datasets: [{
+                            data: [
+                                stats.total_employees,
+                                stats.total_branches,
+                                stats.total_services,
+                                stats.total_customers,
+                                stats.total_appointments
+                            ],
+                            backgroundColor: [
+                                '#3498db',
+                                '#2ecc71',
+                                '#f1c40f',
+                                '#9b59b6',
+                                '#e74c3c'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+
+            }
+            catch(error){
+
+                dashboard.innerHTML = `
+                    <p class="loading">
+                        Failed to load dashboard data:
+                        ${error.message}
+                    </p>
+                `;
+
+                console.error(error);
+            }
+        }
+
+        loadData();
+
+    </script>
+
+</body>
+</html>
+

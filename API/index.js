@@ -21,6 +21,17 @@ app.get('/',(req,res)=>{
         res.status(500).json({error : err.message});
     }
 });
+
+//---------------------customer---------------------------------------
+app.get('/customers',async(req,res)=>{
+    try {
+        const result = await pool.query('select * from customer');
+        res.json(result.rows);
+    } catch (err) {
+        res.status(500).json({error : err.message});
+    }
+});
+
 //--------------------------employees-----------------------------------------------------------------------
 app.get('/employee',async(req,res)=>{
     try {
@@ -31,15 +42,7 @@ app.get('/employee',async(req,res)=>{
     }
 });
 
-//---------------------coustomer---------------------------------------------------------------------------------
-app.get('/coustomer',async(req,res)=>{
-    try {
-        const result = await pool.query('select * from coustomer');
-        res.json(result.rows);
-    } catch (err) {
-        res.status(500).json({error : err.message});
-    }
-});
+
 //=================branch=======================================================================================
 app.get('/branch',async(req,res)=>{
     try {
